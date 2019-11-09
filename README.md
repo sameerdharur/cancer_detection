@@ -18,4 +18,7 @@ A couple of other useful references :
 
 1. A link to the paper itself, which is a very extensive account of this very task (the first of the task, rather) : https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002686
 
-2. General PyTorch tutorials : https://pytorch.org/tutorials/
+2. Link to the description of the dataset: https://arxiv.org/pdf/1901.07031.pdf
+
+3. General PyTorch tutorials : https://pytorch.org/tutorials/
+

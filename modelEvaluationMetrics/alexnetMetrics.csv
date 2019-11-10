@@ -1,3 +1,0 @@
-learningRate,momentum,epochs,batchSize,valAccuracy
-0.001,15,0.9,8,"tensor(0.7044, dtype=torch.float64)"
-0.01,15,0.9,8,"tensor(0.6732, dtype=torch.float64)"

@@ -11,12 +11,35 @@ import time
 import os
 import copy
 
+'''
+File: dataset.py
+Project: cs6476-computervision-project
+File Created: October 2019
+Author: Shalini Chaudhuri (you@you.you)
+'''
+
 class DataSet:
-    """
-    Note: Ensure data directory is in ImageFolder format.
 
     """
-    
+        author: @chaudhsh
+
+        Ensure that the data directory looks like:
+
+        /data/benign/abc.jpg
+        /data/benign/abc1.jpg    
+
+        /data/malignant/xyz.jpg
+        /data/malignant/xyz1.jpg
+
+        This class will take care of automatically generating the dataset and labels for you.
+        labels will be "benign", "malignant"
+
+        1. initDataLoader will create the dataDictonary
+        2. setuploaderTransforms will ensure the inputs are resized to teh inputsize expected by
+        the pretrained network and normalized and converted to a tensor.
+    """
+
+
     data_dir = None
 
     def __init__(self, data_dir):
@@ -31,6 +54,7 @@ class DataSet:
         dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=batch_size,
                                                     shuffle=True, num_workers=4)
                     for x in ['train', 'val']}
+        # test data is not shuffled to get proper correspondences between filename and predicted label
         dataloaders['test'] = torch.utils.data.DataLoader(image_datasets['test'], batch_size=batch_size,
                                                     shuffle=False, num_workers=4)
         dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'val', 'test']}
@@ -81,3 +105,4 @@ class DataSet:
         # }
 
         return data_transforms
+

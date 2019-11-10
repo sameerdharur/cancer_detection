@@ -31,15 +31,15 @@ class Classifier:
         self.feature_extract = feature_extract
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+
+    
     def train_model(self, model, criterion, optimizer, dataloaders, dataset_sizes, is_inception=False):
         since = time.time()
 
         best_model_weights = copy.deepcopy(model.state_dict())
         best_accuracy = 0.0
         val_acc_history = []
-
-        per_epoch_loss = []
-        per_epoch_accuracy = []
+        train_acc_history = []
 
         for epoch in range(self.num_epochs):
             print('Epoch {}/{}'.format(epoch, self.num_epochs - 1))
@@ -66,7 +66,9 @@ class Classifier:
                     # forward
                     # track history if only in train
                     with torch.set_grad_enabled(phase == 'train'):
-   
+                        # outputs = model(inputs)
+                        # loss = criterion(outputs, labels)
+                        
                         if is_inception and phase == 'train':
                             # From https://discuss.pytorch.org/t/how-to-optimize-inception-model-with-auxiliary-classifiers/7958
                             outputs, aux_outputs = model(inputs)
@@ -94,10 +96,6 @@ class Classifier:
                 epoch_loss = running_loss / dataset_sizes[phase]
                 epoch_acc = running_corrects.double() / dataset_sizes[phase]
 
-                if phase == 'train':
-                    per_epoch_accuracy.append(epoch_acc)
-                    per_epoch_loss.append(epoch_loss)
-
                 print('{} Loss: {:.4f} Acc: {:.4f}'.format(
                     phase, epoch_loss, epoch_acc))
 
@@ -107,6 +105,8 @@ class Classifier:
                     best_model_weights = copy.deepcopy(model.state_dict())
                 if phase == 'val':
                     val_acc_history.append(epoch_acc)
+                if phase == 'train':
+                    train_acc_history.append(epoch_acc)
 
             print()
 
@@ -117,7 +117,7 @@ class Classifier:
 
         # load best model weights
         model.load_state_dict(best_model_weights)
-        return model, val_acc_history, per_epoch_loss, per_epoch_accuracy
+        return model, train_acc_history, val_acc_history, best_accuracy
 
 
     def set_requires_grad(self, model):
@@ -199,10 +199,9 @@ class Classifier:
                 sample_names = [s[0] for s in samples]
                 
                 predictions.extend(list(zip(sample_names, predicted_classes)))
-                # labels = labels.cpu()
-                # predicted = predicted.cpu()
-                y_actual.extend(labels.cpu().numpy())
-                y_pred.extend(predicted.cpu().numpy())
+
+                y_actual.extend(labels.numpy())
+                y_pred.extend(predicted.numpy())
 
         try:
             print(f"Accuracy (Sklearn): {sklearn.metrics.accuracy_score(y_actual, y_pred)}")

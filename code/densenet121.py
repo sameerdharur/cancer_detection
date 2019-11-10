@@ -19,7 +19,7 @@ if __name__ == '__main__':
     output_classes = 2
     feature_extract = True
     batch_size = 8
-    num_epochs = 1
+    num_epochs = 20
 
     learningRate = 0.001
     momentum = 0.9
@@ -85,5 +85,5 @@ if __name__ == '__main__':
     predictions = densenetClassifier.testModel(dataloaders_dict, model, class_names, dataset_sizes, batch_size=8)
 
     # save predicted values
-    save_as_name = '../trainedModels/predicted_labels/predictedLabelsDensenet_' + run_id + '.csv'
+    save_as_name = '../trained_models/predicted_labels/predictedLabelsDensenet_' + run_id + '.csv'
     np.savetxt(save_as_name, predictions, fmt='%s')
